@@ -1,9 +1,11 @@
+import Scheduler from './components/Scheduler';
 
-
-const App = () => {
+const App: React.FC = () => {
   return (
-    <div>App</div>
-  )
-}
+    <div className="app-container">
+      <Scheduler />
+    </div>
+  );
+};
 
-export default App
+export default App;
