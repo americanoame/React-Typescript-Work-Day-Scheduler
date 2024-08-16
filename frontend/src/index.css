@@ -58,3 +58,11 @@ textarea {
   transition: all 0.3s ease-in-out;
   
 }
+
+
+#currentHour {
+  font-family: "bolder";
+  width: 150px; /* Adjust as needed */
+  text-align: center;
+  display: inline-block;
+}
