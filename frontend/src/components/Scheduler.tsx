@@ -16,10 +16,10 @@ const Scheduler: React.FC<{ setReminderText: React.Dispatch<React.SetStateAction
       const now = dayjs();
       loadedBlocks.forEach(block => {
         const appointmentTime = dayjs().hour(block.hour).minute(0).second(0);
-        const reminderTime = appointmentTime.subtract(12, 'minute'); // Adjust to 30 minutes before the appointment
+        const reminderTime = appointmentTime.subtract(50, 'minute'); // Adjust to 30 minutes before the appointment
 
         if (now.isSame(reminderTime, 'minute')) {
-          setReminderText(`Reminder: Your appointment at ${appointmentTime.format('h:mm A')} is approaching in 12 minutes.`);
+          setReminderText(`Reminder: Your appointment at ${appointmentTime.format('h:mm A')} is approaching in 50 minutes.`);
         }
       });
     };
