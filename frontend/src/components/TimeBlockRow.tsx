@@ -6,9 +6,10 @@ interface TimeBlockRowProps {
   block: TimeBlock;
   onSave: (hour: number, text: string) => void;
   onChange: (hour: number, text: string) => void;
+  onDelete: (hour: number) => void; 
 }
 
-const TimeBlockRow: React.FC<TimeBlockRowProps> = ({ block, onSave, onChange }) => {
+const TimeBlockRow: React.FC<TimeBlockRowProps> = ({ block, onSave, onChange, onDelete }) => {
   const formatHour = (hour: number) => {
     const period = hour >= 12 ? 'PM' : 'AM';
     const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
@@ -30,6 +31,13 @@ const TimeBlockRow: React.FC<TimeBlockRowProps> = ({ block, onSave, onChange }) 
         onClick={() => onSave(block.hour, block.text)}
       >
         <i className="fas fa-save" aria-hidden="true"></i>
+      </button>
+      <button
+        className="btn deleteBtn col-2 col-md-1"
+        aria-label="delete"
+        onClick={() => onDelete(block.hour)} // Delete button
+      >
+        <i className="fas fa-trash" aria-hidden="true"></i>
       </button>
     </div>
   );
