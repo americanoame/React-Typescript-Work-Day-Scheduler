@@ -1,6 +1,5 @@
 export interface TimeBlock {
   hour: number;
-  
   text: string;
   status?: 'past' | 'present' | 'future';
 }
