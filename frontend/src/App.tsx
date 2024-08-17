@@ -8,6 +8,7 @@ import dayjs from 'dayjs';
 const App: React.FC = () => {
   const [currentDay, setCurrentDay] = useState<string>('');
   const [currentHour, setCurrentHour] = useState<string>('');
+  const [reminderText, setReminderText] = useState<string>('');
 
   useEffect(() => {
     // Set the current day when the component mounts
@@ -25,8 +26,8 @@ const App: React.FC = () => {
 
   return (
     <div className="app-container">
-      <Header currentDay={currentDay} currentHour={currentHour}  />
-      <Scheduler /> 
+      <Header currentDay={currentDay} currentHour={currentHour} reminderText={reminderText}  />
+      <Scheduler setReminderText={setReminderText}/> 
     </div>
   );
 };
