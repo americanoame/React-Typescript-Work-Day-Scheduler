@@ -60,11 +60,22 @@ const Scheduler: React.FC<{ setReminderText: React.Dispatch<React.SetStateAction
     ));
   };
 
+  const handleDelete = (hour: number) => {
+    setBlocks(prevBlocks =>
+      prevBlocks.map(block =>
+        block.hour === hour ? { ...block, text: '' } : block
+      )
+    );
+    localStorage.removeItem(`hour-${hour}`);
+  };
+
+
+
   return (
     <div>
       <div className="container-lg px-5">
         {blocks.map(block => (
-          <TimeBlockRow key={block.hour} block={block} onSave={handleSave} onChange={handleChange} />
+          <TimeBlockRow key={block.hour} block={block} onSave={handleSave} onChange={handleChange} onDelete={handleDelete} />
         ))}
       </div>
     </div>
