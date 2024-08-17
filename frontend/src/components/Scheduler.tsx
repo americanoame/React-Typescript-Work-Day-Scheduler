@@ -5,12 +5,24 @@ import { loadBlocksFromLocalStorage, saveBlockToLocalStorage } from '../localSto
 import TimeBlockRow from '../components/TimeBlockRow';
 
 
-const Scheduler: React.FC = () => {
+const Scheduler: React.FC<{ setReminderText: React.Dispatch<React.SetStateAction<string>> }> = ({ setReminderText }) => {
   const [blocks, setBlocks] = useState<TimeBlock[]>(timeBlocks);
 
   useEffect(() => {
     const loadedBlocks = loadBlocksFromLocalStorage(timeBlocks);
     setBlocks(loadedBlocks);
+
+    const checkUpcomingAppointments = () => {
+      const now = dayjs();
+      loadedBlocks.forEach(block => {
+        const appointmentTime = dayjs().hour(block.hour).minute(0).second(0);
+        const reminderTime = appointmentTime.subtract(12, 'minute'); // Adjust to 30 minutes before the appointment
+
+        if (now.isSame(reminderTime, 'minute')) {
+          setReminderText(`Reminder: Your appointment at ${appointmentTime.format('h:mm A')} is approaching in 12 minutes.`);
+        }
+      });
+    };
 
     const updateTimeBlocks = () => {
       const currentHour = dayjs().hour();
@@ -22,9 +34,14 @@ const Scheduler: React.FC = () => {
       );
     };
 
+    checkUpcomingAppointments();
     updateTimeBlocks();
 
-    const interval = setInterval(updateTimeBlocks, 60000);
+    const interval = setInterval(() => {
+      checkUpcomingAppointments();
+      updateTimeBlocks();
+    }, 60000); // Check every minute
+
     return () => clearInterval(interval);
   }, []);
 
