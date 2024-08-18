@@ -9,7 +9,7 @@ const App: React.FC = () => {
   const [currentDay, setCurrentDay] = useState<string>('');
   const [currentHour, setCurrentHour] = useState<string>('');
   const [reminderText, setReminderText] = useState<string>('');
-  const [reminderMinutes, setReminderMinutes] = useState<number>(0);
+  const [reminderMinutes, setReminderMinutes] = useState<string>('');
   useEffect(() => {
     // Set the current day when the component mounts
     setCurrentDay(dayjs().format('MMMM D, YYYY'));
@@ -35,7 +35,7 @@ const App: React.FC = () => {
       />
       <Scheduler
         setReminderText={setReminderText}
-        reminderMinutes={reminderMinutes}
+        reminderMinutes={Number(reminderMinutes) || 0} 
       />
       
     </div>
