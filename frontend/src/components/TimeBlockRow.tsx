@@ -20,10 +20,11 @@ const TimeBlockRow: React.FC<TimeBlockRowProps> = ({ block, onSave, onChange, on
     <div key={block.hour} className={`row time-block ${block.status}`}>
       <div className="col-2 col-md-1 hour text-center py-3">{formatHour(block.hour)}</div>
       <textarea
-        className="col-8 col-md-10 description"
+        className="col-8 mt-2 col-md-10 description"
         rows={3}
         value={block.text}
         onChange={(e) => onChange(block.hour, e.target.value)}
+        style={{ fontSize: '18px' }}
       />
       <button
         className="btn saveBtn col-2 col-md-1"
