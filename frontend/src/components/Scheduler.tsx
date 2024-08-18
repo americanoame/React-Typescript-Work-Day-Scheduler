@@ -24,13 +24,15 @@ const Scheduler: React.FC<SchedulerProps> = ({ setReminderText, reminderMinutes 
 
       let upcomingRemindersFound = false;
 
-      blocks.forEach(block => {
-        const appointmentTime = dayjs().hour(block.hour).minute(0).second(0).millisecond(0);
-        const reminderTime = appointmentTime.subtract(reminderMinutes, 'minute');
+      blocks.forEach((block) => {
+        if (block.text) {
+          const appointmentTime = dayjs().hour(block.hour).minute(0).second(0).millisecond(0);
+          const reminderTime = appointmentTime.subtract(reminderMinutes, 'minute');
 
-        if (now.isAfter(reminderTime) && now.isBefore(appointmentTime)) {
-          setReminderText(`Reminder: Your appointment at ${appointmentTime.format('h:mm A')} is approaching in ${reminderMinutes} minutes.`);
-          upcomingRemindersFound = true;
+          if (now.isAfter(reminderTime) && now.isBefore(appointmentTime)) {
+            setReminderText(`Reminder: Your appointment at ${appointmentTime.format('h:mm A')} is approaching in ${reminderMinutes} minutes.`);
+            upcomingRemindersFound = true;
+          }
         }
       });
 
@@ -41,8 +43,8 @@ const Scheduler: React.FC<SchedulerProps> = ({ setReminderText, reminderMinutes 
 
     const updateTimeBlocks = () => {
       const currentHour = dayjs().hour();
-      setBlocks(prevBlocks =>
-        prevBlocks.map(block => ({
+      setBlocks((prevBlocks) =>
+        prevBlocks.map((block) => ({
           ...block,
           status: block.hour < currentHour ? 'past' : block.hour === currentHour ? 'present' : 'future',
         }))
@@ -58,9 +60,9 @@ const Scheduler: React.FC<SchedulerProps> = ({ setReminderText, reminderMinutes 
     }, 60000); // Check every minute
 
     return () => clearInterval(interval);
-  }, [ blocks, reminderMinutes, setReminderText]); // Include blocks in the dependencies to reflect changes
-  // but i keep getting the Warning: Maximum update depth exceeded error message when i include blocks in the dependencies array 
-  // if removed the error goes away but the code does not work as expected 
+  }, [blocks, reminderMinutes, setReminderText]); // Include blocks in the dependencies to reflect changes
+  // but i keep getting the Warning: Maximum update depth exceeded error message when i include blocks in the dependencies array
+  // if removed the error goes away but the code does not work as expected
 
   const handleSave = (hour: number, text: string) => {
     saveBlockToLocalStorage(hour, text);
@@ -72,18 +74,18 @@ const Scheduler: React.FC<SchedulerProps> = ({ setReminderText, reminderMinutes 
 
   const handleChange = (hour: number, text: string) => {
     const capitalizedText = capitalizeFirstLetter(text);
-    setBlocks(prevBlocks => prevBlocks.map(block => (block.hour === hour ? { ...block, text: capitalizedText } : block)));
+    setBlocks((prevBlocks) => prevBlocks.map((block) => (block.hour === hour ? { ...block, text: capitalizedText } : block)));
   };
 
   const handleDelete = (hour: number) => {
-    setBlocks(prevBlocks => prevBlocks.map(block => (block.hour === hour ? { ...block, text: '' } : block)));
+    setBlocks((prevBlocks) => prevBlocks.map((block) => (block.hour === hour ? { ...block, text: '' } : block)));
     localStorage.removeItem(`hour-${hour}`);
   };
 
   return (
     <div>
       <div className="container-lg px-5">
-        {blocks.map(block => (
+        {blocks.map((block) => (
           <TimeBlockRow key={block.hour} block={block} onSave={handleSave} onChange={handleChange} onDelete={handleDelete} />
         ))}
       </div>
