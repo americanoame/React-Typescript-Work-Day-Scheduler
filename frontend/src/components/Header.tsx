@@ -4,8 +4,8 @@ interface HeaderProps {
   currentDay: string;
   currentHour: string;
   reminderText: string;
-  setReminderMinutes: (minutes: number) => void;
-  reminderMinutes: number;
+  setReminderMinutes: (minutes: string) => void;
+  reminderMinutes: string ;
 }
 
 const Header: React.FC<HeaderProps> = ({
@@ -24,7 +24,7 @@ const Header: React.FC<HeaderProps> = ({
       <input
         type="number"
         value={reminderMinutes}
-        onChange={(e) => setReminderMinutes(Number(e.target.value))}
+        onChange={(e) => setReminderMinutes(String(e.target.value))}
       />
     </div>
     <p id="currentDay" className="lead">
