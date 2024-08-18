@@ -72,7 +72,6 @@ header {
   position: fixed;
   top: 0;
   left: 0;
- 
   width: 100%;
   z-index: 1000; /* Ensures the header stays on top */
   background-color: white; /* Ensure the header covers content beneath it */
