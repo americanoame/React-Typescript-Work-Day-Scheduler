@@ -66,3 +66,20 @@ textarea {
   text-align: center;
   display: inline-block;
 }
+
+
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+ 
+  width: 100%;
+  z-index: 1000; /* Ensures the header stays on top */
+  background-color: white; /* Ensure the header covers content beneath it */
+  /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);  */
+  padding: 1rem; /* Adjust as needed */
+}
+
+.app-container {
+  margin-top: 300px; /* Adjust based on your header's height */
+}
