@@ -4,24 +4,39 @@ import { TimeBlock, timeBlocks } from '../types';
 import { loadBlocksFromLocalStorage, saveBlockToLocalStorage } from '../localStorageUtils';
 import TimeBlockRow from '../components/TimeBlockRow';
 
+interface SchedulerProps {
+  setReminderText: React.Dispatch<React.SetStateAction<string>>;
+  reminderMinutes: number; // New prop to receive reminder minutes from App
+}
 
-const Scheduler: React.FC<{ setReminderText: React.Dispatch<React.SetStateAction<string>> }> = ({ setReminderText }) => {
+const Scheduler: React.FC<SchedulerProps> = ({ setReminderText, reminderMinutes }) => {
   const [blocks, setBlocks] = useState<TimeBlock[]>(timeBlocks);
 
   useEffect(() => {
+    // Load blocks from local storage
     const loadedBlocks = loadBlocksFromLocalStorage(timeBlocks);
     setBlocks(loadedBlocks);
+  }, []);
 
+  useEffect(() => {
     const checkUpcomingAppointments = () => {
-      const now = dayjs();
-      loadedBlocks.forEach(block => {
-        const appointmentTime = dayjs().hour(block.hour).minute(0).second(0);
-        const reminderTime = appointmentTime.subtract(50, 'minute'); // Adjust to 30 minutes before the appointment
+      const now = dayjs().minute(dayjs().minute()).second(0).millisecond(0);
 
-        if (now.isSame(reminderTime, 'minute')) {
-          setReminderText(`Reminder: Your appointment at ${appointmentTime.format('h:mm A')} is approaching in 50 minutes.`);
+      let upcomingRemindersFound = false;
+
+      blocks.forEach(block => {
+        const appointmentTime = dayjs().hour(block.hour).minute(0).second(0).millisecond(0);
+        const reminderTime = appointmentTime.subtract(reminderMinutes, 'minute');
+
+        if (now.isAfter(reminderTime) && now.isBefore(appointmentTime)) {
+          setReminderText(`Reminder: Your appointment at ${appointmentTime.format('h:mm A')} is approaching in ${reminderMinutes} minutes.`);
+          upcomingRemindersFound = true;
         }
       });
+
+      if (!upcomingRemindersFound) {
+        setReminderText('');
+      }
     };
 
     const updateTimeBlocks = () => {
@@ -43,7 +58,9 @@ const Scheduler: React.FC<{ setReminderText: React.Dispatch<React.SetStateAction
     }, 60000); // Check every minute
 
     return () => clearInterval(interval);
-  }, []);
+  }, [ blocks, reminderMinutes, setReminderText]); // Include blocks in the dependencies to reflect changes
+  // but i keep getting the Warning: Maximum update depth exceeded error message when i include blocks in the dependencies array 
+  // if removed the error goes away but the code does not work as expected 
 
   const handleSave = (hour: number, text: string) => {
     saveBlockToLocalStorage(hour, text);
@@ -55,21 +72,13 @@ const Scheduler: React.FC<{ setReminderText: React.Dispatch<React.SetStateAction
 
   const handleChange = (hour: number, text: string) => {
     const capitalizedText = capitalizeFirstLetter(text);
-    setBlocks(blocks.map(block => 
-      block.hour === hour ? { ...block, text: capitalizedText } : block
-    ));
+    setBlocks(prevBlocks => prevBlocks.map(block => (block.hour === hour ? { ...block, text: capitalizedText } : block)));
   };
 
   const handleDelete = (hour: number) => {
-    setBlocks(prevBlocks =>
-      prevBlocks.map(block =>
-        block.hour === hour ? { ...block, text: '' } : block
-      )
-    );
+    setBlocks(prevBlocks => prevBlocks.map(block => (block.hour === hour ? { ...block, text: '' } : block)));
     localStorage.removeItem(`hour-${hour}`);
   };
-
-
 
   return (
     <div>
