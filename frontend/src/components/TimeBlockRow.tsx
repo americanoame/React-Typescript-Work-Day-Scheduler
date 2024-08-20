@@ -25,6 +25,7 @@ const TimeBlockRow: React.FC<TimeBlockRowProps> = ({ block, onSave, onChange, on
         value={block.text}
         onChange={(e) => onChange(block.hour, e.target.value)}
         style={{ fontSize: '18px' }}
+        disabled={block.status === 'past'}
       />
       <button
         className="btn saveBtn col-2 col-md-1"
