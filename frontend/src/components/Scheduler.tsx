@@ -43,11 +43,18 @@ const Scheduler: React.FC<SchedulerProps> = ({ setReminderText, reminderMinutes 
 
     const updateTimeBlocks = () => {
       const currentHour = dayjs().hour();
+
+      // Filter out all past blocks except for the last one
+      const pastBlocks = blocks.filter(block => block.hour < currentHour);
+      const lastPastBlock = pastBlocks.length > 0 ? pastBlocks[pastBlocks.length - 1] : null;
+
       setBlocks((prevBlocks) =>
-        prevBlocks.map((block) => ({
-          ...block,
-          status: block.hour < currentHour ? 'past' : block.hour === currentHour ? 'present' : 'future',
-        }))
+        prevBlocks
+          .filter(block => block.hour >= currentHour || block.hour === lastPastBlock?.hour) // Retain only the current, future, and last past block
+          .map((block) => ({
+            ...block,
+            status: block.hour < currentHour ? 'past' : block.hour === currentHour ? 'present' : 'future',
+          }))
       );
     };
 
@@ -84,7 +91,7 @@ const Scheduler: React.FC<SchedulerProps> = ({ setReminderText, reminderMinutes 
 
   return (
     <div>
-      <div className="container-lg px-5">
+      <div className="custom-container px-5">
         {blocks.map((block) => (
           <TimeBlockRow key={block.hour} block={block} onSave={handleSave} onChange={handleChange} onDelete={handleDelete} />
         ))}
