@@ -18,6 +18,10 @@ export const timeBlocks: TimeBlock[] = [
   { hour: 18, text: '' }, // 6 PM
   { hour: 19, text: '' }, // 6 PM
   { hour: 20, text: '' }, // 6 PM
+  { hour: 21, text: '' }, // 6 PM
+  { hour: 22, text: '' }, // 6 PM
+  { hour: 23, text: '' }, // 6 PM
+  { hour: 24, text: '' }, // 6 PM
 ];
 
 
